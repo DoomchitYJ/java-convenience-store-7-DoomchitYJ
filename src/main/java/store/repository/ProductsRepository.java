@@ -1,5 +1,7 @@
 package store.repository;
 
+import static store.constant.Constant.DELIMITER;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,7 +14,6 @@ public class ProductsRepository {
 
     private static final int PRODUCTS_START_INDEX = 1;
 
-    private static final String DELIMITER = ",";
     private final Path filePath;
 
     public ProductsRepository(final Path filePath) {
