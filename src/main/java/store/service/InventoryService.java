@@ -1,6 +1,8 @@
 package store.service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import store.domain.Inventory;
 import store.domain.Product;
 
@@ -46,5 +48,23 @@ public class InventoryService {
 
     public static List<Product> getProducts() {
         return inventory.getProducts();
+    }
+
+    public static void updateProductQuantity(String name, int quantity) {
+        List<Product> products = inventory.findProductByName(name).stream()
+                        .sorted(Comparator.comparing((Product p) -> !p.getPromotion().isEmpty()))
+                        .collect(Collectors.toList());
+        update(products, quantity);
+    }
+
+    private static void update(List<Product> products, int quantity) {
+        for (Product product : products) {
+            if (product.getQuantity() >= quantity) {
+                product.updateQuantity(-quantity);
+                break;
+            }
+            quantity -= product.getQuantity();
+            product.updateQuantity(-product.getQuantity());
+        }
     }
 }
