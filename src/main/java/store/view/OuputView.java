@@ -1,14 +1,13 @@
 package store.view;
 
+import static store.constant.Constant.INDEX_NAME;
+import static store.constant.Constant.INDEX_PRICE;
+import static store.constant.Constant.INDEX_PROMOTION;
+import static store.constant.Constant.INDEX_QUANTITY;
+
 import java.util.List;
-import java.util.Map;
 
 public class OuputView {
-
-    private static final int INDEX_NAME = 0;
-    private static final int INDEX_PRICE = 1;
-    private static final int INDEX_QUANTITY = 2;
-    private static final int INDEX_PROMOTION = 3;
 
     private static final String NULL = "null";
 
