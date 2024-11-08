@@ -20,6 +20,14 @@ public class PurchasePolicy {
 
     private static final List<Promotion> promotions = loadPromotions();
 
+    public static boolean isPromotionValid(Product product) {
+        Promotion promotion = promotions.stream()
+                .filter(p -> p.getName().equals(product.getPromotion()))
+                .findFirst().orElse(null);
+        Date today = new Date();
+        return today.after(promotion.getStartDate()) && today.before(promotion.getEndDate());
+    }
+
     private static List<Promotion> loadPromotions() {
         PromotionsRepository promotionsRepository = new PromotionsRepository(PROMOTIONS_FILE_PATH);
         List<Promotion> promotions = new ArrayList<>();
