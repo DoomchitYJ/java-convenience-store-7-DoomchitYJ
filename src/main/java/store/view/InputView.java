@@ -6,6 +6,9 @@ import camp.nextstep.edu.missionutils.Console;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import store.domain.Order;
 
 public class InputView {
 
@@ -16,10 +19,14 @@ public class InputView {
         System.out.println(BUYING_VIEW);
 
         List<String> inputOrders = Arrays.stream(Console.readLine().trim().split(DELIMITER)).toList();
+        Pattern pattern = Pattern.compile(ORDER_REGEX);
         List<Order> orders = new ArrayList<>();
         for (String input : inputOrders) {
             validateFormat(input);
+            String name = parseName(pattern, input);
+            int quantity = parseQuantity(pattern, input);
 
+            orders.add(new Order(name, quantity));
         }
 
         return orders;
@@ -29,6 +36,20 @@ public class InputView {
         if (!input.matches(ORDER_REGEX)) {
             throw new IllegalArgumentException();
         }
+    }
+
+    private static String parseName(Pattern pattern, String input) {
+        Matcher matcher = pattern.matcher(input);
+        String name = matcher.group(1);
+
+        return name;
+    }
+
+    private static int parseQuantity(Pattern pattern, String input) {
+        Matcher matcher = pattern.matcher(input);
+        int quantity = Integer.parseInt(matcher.group(1));
+
+        return quantity;
     }
 }
 
