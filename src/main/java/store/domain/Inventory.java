@@ -14,4 +14,8 @@ public class Inventory {
     public List<Product> getProducts() {
         return products;
     }
+
+    public boolean isProductExistent(String name) {
+        return products.stream().anyMatch(p -> p.getName().equals(name));
+    }
 }
