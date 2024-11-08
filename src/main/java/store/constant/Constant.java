@@ -12,4 +12,11 @@ public class Constant {
     public static final int INDEX_PRICE = 1;
     public static final int INDEX_QUANTITY = 2;
     public static final int INDEX_PROMOTION = 3;
+
+    public static final int INDEX_BUY = 1;
+    public static final int INDEX_GET = 2;
+    public static final int INDEX_START_DATE = 3;
+    public static final int INDEX_END_DATE = 4;
+
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
 }
