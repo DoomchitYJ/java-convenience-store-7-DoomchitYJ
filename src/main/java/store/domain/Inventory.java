@@ -1,6 +1,7 @@
 package store.domain;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import store.service.InventoryService;
 
 public class Inventory {
@@ -17,5 +18,11 @@ public class Inventory {
 
     public boolean isProductExistent(String name) {
         return products.stream().anyMatch(p -> p.getName().equals(name));
+    }
+
+    public List<Product> findProductByName(String name) {
+        return products.stream()
+                .filter(p -> p.getName().equals(name))
+                .collect(Collectors.toList());
     }
 }

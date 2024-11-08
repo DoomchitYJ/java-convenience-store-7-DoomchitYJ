@@ -3,11 +3,13 @@ package store.controller;
 import static store.constant.Constant.MAX_TRY;
 import static store.exception.ExceptionMessage.MAX_TRY_ERROR;
 import static store.exception.ExceptionMessage.NON_EXISTENT_PRODUCT;
+import static store.exception.ExceptionMessage.TOO_MANY_ORDER;
 import static store.view.ErrorPrinter.printError;
 
 import java.util.List;
 import store.domain.Inventory;
 import store.domain.Order;
+import store.domain.Product;
 import store.exception.StoreException;
 import store.view.InputView;
 import store.view.OutputView;
@@ -28,7 +30,7 @@ public class Controller {
             try {
                 List<Order> orders = InputView.readOrder();
                 validateOrders(orders);
-                
+
                 return orders;
             } catch (IllegalArgumentException e) {
                 printError(e.getMessage());
@@ -42,10 +44,21 @@ public class Controller {
             if (!hasProduct(order)) {
                 throw new StoreException(NON_EXISTENT_PRODUCT);
             }
+            if (!isStockAvailable(order)) {
+                throw new StoreException(TOO_MANY_ORDER);
+            }
         }
     }
 
     private boolean hasProduct(Order order) {
         return inventory.isProductExistent(order.getName());
+    }
+
+    private boolean isStockAvailable(Order order) {
+        List<Product> products = inventory.findProductByName(order.getName());
+        int count = products.stream()
+                .mapToInt(Product::getQuantity)
+                .sum();
+        return count >= order.getQuantity();
     }
 }
