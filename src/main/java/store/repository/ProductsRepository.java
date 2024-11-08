@@ -1,15 +1,21 @@
 package store.repository;
 
 import static store.constant.Constant.DELIMITER;
+import static store.constant.Constant.INDEX_NAME;
+import static store.constant.Constant.INDEX_PRICE;
+import static store.constant.Constant.INDEX_PROMOTION;
+import static store.constant.Constant.INDEX_QUANTITY;
+import static store.constant.Constant.NULL;
+import static store.exception.ExceptionMessage.FILE_PATH_ERROR;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import store.domain.Product;
+import store.exception.StoreException;
 
 public class ProductsRepository {
 
@@ -21,28 +27,33 @@ public class ProductsRepository {
         this.filePath = Paths.get(filePath);
     }
 
-    public List<List<String>> readProductsFile() throws IOException {
-        List<String> lines = Files.readAllLines(filePath);
-        String[] header = lines.getFirst().split(DELIMITER);
-
-        List<List<String>> products = addProducts(lines, header);
-
-        return products;
+    public List<Product> loadInventory() {
+        try {
+            List<String> lines = Files.readAllLines(filePath);
+            List<Product> inventory = new ArrayList<>();
+            for (int i = PRODUCTS_START_INDEX; i < lines.size(); i++) {
+                String[] product = lines.get(i).split(DELIMITER);
+                inventory.add(convertIntoProduct(product));
+            }
+            return inventory;
+        } catch (IOException e) {
+            throw new StoreException(FILE_PATH_ERROR);
+        }
     }
 
-    private List<List<String>> addProducts(List<String> lines, String[] header) {
-        List<List<String>> products = new ArrayList<>();
+    private static Product convertIntoProduct(String[] product) {
+        String name = product[INDEX_NAME];
+        int price = Integer.parseInt(product[INDEX_PRICE]);
+        int quantity = Integer.parseInt(product[INDEX_QUANTITY]);
+        String promotion = getPromotion(product);
 
-        for (int i = PRODUCTS_START_INDEX; i < lines.size(); i++) {
-            String[] line = lines.get(i).split(DELIMITER);
-            List<String> productInfo = new ArrayList<>();
+        return new Product(name, price, quantity, promotion);
+    }
 
-            for (int j = 0; j < header.length; j++) {
-                productInfo.add(line[j].trim());
-            }
-            products.add(productInfo);
-        }
+    private static String getPromotion(String[] product) {
+        String promotion = product[INDEX_PROMOTION];
+        if (promotion.equals(NULL)) { return ""; }
 
-        return products;
+        return promotion;
     }
 }

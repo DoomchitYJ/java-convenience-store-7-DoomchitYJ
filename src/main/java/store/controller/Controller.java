@@ -7,20 +7,17 @@ import static store.exception.ExceptionMessage.TOO_MANY_ORDER;
 import static store.view.ErrorPrinter.printError;
 
 import java.util.List;
-import store.domain.Inventory;
 import store.domain.Order;
-import store.domain.Product;
 import store.exception.StoreException;
+import store.service.InventoryService;
 import store.view.InputView;
 import store.view.OutputView;
 
 public class Controller {
 
-    private Inventory inventory = new Inventory();
-
     public void run() {
 
-        OutputView.showProducts(inventory);
+        OutputView.showProducts();
         List<Order> orders = InputView.readOrder();
 
     }
@@ -51,14 +48,10 @@ public class Controller {
     }
 
     private boolean hasProduct(Order order) {
-        return inventory.isProductExistent(order.getName());
+        return InventoryService.isProductExistent(order.getName());
     }
 
     private boolean isStockAvailable(Order order) {
-        List<Product> products = inventory.findProductByName(order.getName());
-        int count = products.stream()
-                .mapToInt(Product::getQuantity)
-                .sum();
-        return count >= order.getQuantity();
+        return InventoryService.getProductQuantity(order.getName()) >= order.getQuantity();
     }
 }

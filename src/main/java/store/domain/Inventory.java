@@ -1,23 +1,23 @@
 package store.domain;
 
+import static store.config.Congfig.PRODUCTS_FILE_PATH;
+
 import java.util.List;
 import java.util.stream.Collectors;
-import store.service.InventoryService;
+import store.repository.ProductsRepository;
 
 public class Inventory {
+
+    private static final ProductsRepository productsRepository = new ProductsRepository(PRODUCTS_FILE_PATH);
 
     private static List<Product> products;
 
     public Inventory() {
-        this.products = InventoryService.setUpInventory();
+        this.products = productsRepository.loadInventory();
     }
 
     public List<Product> getProducts() {
         return products;
-    }
-
-    public boolean isProductExistent(String name) {
-        return products.stream().anyMatch(p -> p.getName().equals(name));
     }
 
     public List<Product> findProductByName(String name) {
