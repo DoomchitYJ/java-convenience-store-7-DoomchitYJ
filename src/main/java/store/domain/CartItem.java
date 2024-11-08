@@ -12,4 +12,23 @@ public class CartItem {
         this.free = free;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public int getFree() {
+        return free;
+    }
+
+    public void setQuantity(final int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setFree(final int free) {
+        this.free = free;
+    }
 }
