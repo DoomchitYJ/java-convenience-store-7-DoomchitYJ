@@ -20,6 +20,30 @@ public class InventoryService {
                 .sum();
     }
 
+    public static int getPromotionProductQuantity(String name) {
+        List<Product> products = inventory.findProductByName(name);
+        return products.stream()
+                .filter(p -> !p.getPromotion().isEmpty())
+                .findFirst()
+                .map(Product::getQuantity)
+                .orElse(0);
+    }
+
+    public static String getPromotionNameByProductName(String name) {
+        List<Product> products = inventory.findProductByName(name);
+        return products.stream()
+                .filter(p -> !p.getPromotion().isEmpty())
+                .map(Product::getPromotion)
+                .findFirst()
+                .orElse("");
+    }
+
+    public static Product getProduct(String name) {
+        return inventory.findProductByName(name).stream()
+                .findFirst()
+                .orElse(null);
+    }
+
     public static List<Product> getProducts() {
         return inventory.getProducts();
     }
