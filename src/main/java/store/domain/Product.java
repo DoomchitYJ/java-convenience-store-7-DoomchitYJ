@@ -21,7 +21,11 @@ public class Product {
         quantity += amount;
     }
 
-    public static int getName() {
+    public static String getName() {
+        return name;
+    }
+
+    public static int getQuantity() {
         return quantity;
     }
 
