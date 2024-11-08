@@ -2,13 +2,13 @@ package store.domain;
 
 public class Product {
 
-    private static String name;
+    private String name;
 
-    private static int price;
+    private int price;
 
-    private static int quantity;
+    private int quantity;
 
-    private static String promotion;
+    private String promotion;
 
     public Product(final String name, final int price, final int quantity, final String promotion) {
         this.name = name;
@@ -21,19 +21,19 @@ public class Product {
         quantity += amount;
     }
 
-    public static String getName() {
+    public String getName() {
         return name;
     }
 
-    public static int getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public static int getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public static String getPromotion() {
+    public String getPromotion() {
         return promotion;
     }
 }
