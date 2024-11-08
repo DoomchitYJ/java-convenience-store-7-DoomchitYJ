@@ -7,9 +7,7 @@ import static store.constant.Constant.INDEX_QUANTITY;
 
 import java.util.List;
 
-public class OuputView {
-
-    private static final String NULL = "null";
+public class OutputView {
 
     private static final int NO_STOCK = 0;
 
