@@ -1,6 +1,7 @@
 package store.view;
 
 import static store.constant.Constant.DELIMITER;
+import static store.exception.ExceptionMessage.INVALID_FORMAT;
 
 import camp.nextstep.edu.missionutils.Console;
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import store.domain.Order;
+import store.exception.ExceptionMessage;
+import store.exception.StoreException;
 
 public class InputView {
 
@@ -34,7 +37,7 @@ public class InputView {
 
     private static void validateFormat(String input) {
         if (!input.matches(ORDER_REGEX)) {
-            throw new IllegalArgumentException();
+            throw new StoreException(INVALID_FORMAT);
         }
     }
 

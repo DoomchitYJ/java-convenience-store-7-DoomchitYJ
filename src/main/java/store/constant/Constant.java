@@ -4,6 +4,8 @@ public class Constant {
 
     public static final String NULL = "null";
 
+    public static final int MAX_TRY = 5;
+
     public static final String DELIMITER = ",";
 
     public static final int INDEX_NAME = 0;
