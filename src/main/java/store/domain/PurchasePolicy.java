@@ -7,6 +7,8 @@ import static store.constant.Constant.INDEX_END_DATE;
 import static store.constant.Constant.INDEX_GET;
 import static store.constant.Constant.INDEX_NAME;
 import static store.constant.Constant.INDEX_START_DATE;
+import static store.constant.Constant.REPLY_NO;
+import static store.constant.Constant.REPLY_YES;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -15,17 +17,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import store.repository.PromotionsRepository;
+import store.service.CartService;
+import store.service.InventoryService;
+import store.view.InputView;
 
 public class PurchasePolicy {
 
     private static final List<Promotion> promotions = loadPromotions();
 
-    public static boolean isPromotionValid(Product product) {
-        Promotion promotion = promotions.stream()
-                .filter(p -> p.getName().equals(product.getPromotion()))
-                .findFirst().orElse(null);
-        Date today = new Date();
-        return today.after(promotion.getStartDate()) && today.before(promotion.getEndDate());
+    public static void buy(Order order) {
+        Promotion promotion = findPromotionByName(InventoryService.getPromotionNameByProductName(order.getName()));
+        applyPromotion(order, promotion);
     }
 
     private static List<Promotion> loadPromotions() {
@@ -61,5 +63,69 @@ public class PurchasePolicy {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static Promotion findPromotionByName(String promotionName) {
+        return promotions.stream()
+                .filter(p -> p.getName().equals(promotionName))
+                .findFirst().orElse(null);
+    }
+
+
+    private static void applyPromotion(Order order, Promotion promotion) {
+        CartService cartService = new CartService();
+        String name = order.getName();
+        int quantity = order.getQuantity();
+        int free = calculateFree(order, promotion);
+
+        if (!isPromotionValid(promotion)) {
+            cartService.addToCart(name, quantity, free);
+            return;
+        }
+
+        if (isBonusPossible(order, promotion)) {
+            String reply = InputView.readMoreFree(order.getName());
+            if (reply.equals(REPLY_YES)) {
+                free++;
+            }
+            cartService.addToCart(name, quantity, free);
+            return;
+        }
+
+        if (isPromotionStockOut(order)) {
+            int promotionQuantity = InventoryService.getPromotionProductQuantity(order.getName());
+            int left = promotionQuantity - free * (promotion.getBuy()+promotion.getGet());
+            String reply = InputView.readNoDiscount(order.getName(), left);
+            if (reply.equals(REPLY_NO)) {
+                quantity -= left;
+            }
+            cartService.addToCart(name, quantity, free);
+        }
+    }
+
+    private static int calculateFree(Order order, Promotion promotion) {
+        int promotionQuantity = InventoryService.getPromotionProductQuantity(order.getName());
+        if (promotionQuantity >= order.getQuantity()) {
+            return (int) (order.getQuantity() / (promotion.getBuy() + promotion.getGet()));
+        }
+        return (int) (promotionQuantity / (promotion.getBuy() + promotion.getGet()));
+    }
+
+    private static boolean isPromotionValid(Promotion promotion) {
+        if (promotion == null) {
+            return false;
+        }
+        Date today = new Date();
+        return today.after(promotion.getStartDate()) && today.before(promotion.getEndDate());
+    }
+
+    private static boolean isBonusPossible(Order order, Promotion promotion) {
+        return order.getQuantity() % (promotion.getBuy() + promotion.getGet()) == promotion.getBuy()
+                && InventoryService.getPromotionProductQuantity(order.getName())
+                > order.getQuantity() + promotion.getGet();
+    }
+
+    private static boolean isPromotionStockOut(Order order) {
+        return order.getQuantity() > InventoryService.getPromotionProductQuantity(order.getName());
     }
 }
