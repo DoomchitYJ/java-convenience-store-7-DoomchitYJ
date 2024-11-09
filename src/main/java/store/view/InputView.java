@@ -2,6 +2,7 @@ package store.view;
 
 import static store.constant.Constant.DELIMITER;
 import static store.exception.ExceptionMessage.INVALID_FORMAT;
+import static store.exception.ExceptionMessage.NOT_YES_OR_NO;
 
 import camp.nextstep.edu.missionutils.Console;
 import java.util.ArrayList;
@@ -18,6 +19,9 @@ public class InputView {
     private static final String ORDER_REGEX = "\\[\\p{L}+\\-\\d+\\]";
 
     private static final String MORE_FREE_VIEW = "현재 {상품명}은(는) 1개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)";
+
+    private static final String REPLY_YES = "Y";
+    private static final String REPLY_NO = "N";
 
     public static List<Order> readOrder() {
         System.out.println(BUYING_VIEW);
@@ -59,7 +63,15 @@ public class InputView {
     public static String readMoreFree() {
         System.out.println(MORE_FREE_VIEW);
 
-        return Console.readLine().trim();
+        String input = Console.readLine().trim();
+        validateYesOrNo(input);
+        return input;
+    }
+
+    private static void validateYesOrNo(String input) {
+        if (!input.equals(REPLY_YES) && !input.equals(REPLY_NO)) {
+            throw new StoreException(NOT_YES_OR_NO);
+        }
     }
 }
 
