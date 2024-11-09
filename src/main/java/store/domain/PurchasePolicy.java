@@ -50,6 +50,7 @@ public class PurchasePolicy {
                     free++;
                 }
                 cartService.addToCart(order.getName(), order.getQuantity(), free);
+                return;
             } catch (IllegalArgumentException e) {
                 printError(e.getMessage());
             }
@@ -68,6 +69,7 @@ public class PurchasePolicy {
                     quantity -= left;
                 }
                 cartService.addToCart(order.getName(), quantity, free);
+                return;
             } catch (IllegalArgumentException e) {
                 printError(e.getMessage());
             }
