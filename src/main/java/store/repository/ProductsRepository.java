@@ -1,5 +1,6 @@
 package store.repository;
 
+import static store.constant.Constant.CONTENTS_START_INDEX;
 import static store.constant.Constant.DELIMITER;
 import static store.constant.Constant.INDEX_NAME;
 import static store.constant.Constant.INDEX_PRICE;
@@ -19,7 +20,6 @@ import store.exception.StoreException;
 
 public class ProductsRepository {
 
-    private static final int PRODUCTS_START_INDEX = 1;
 
     private final Path filePath;
 
@@ -31,7 +31,7 @@ public class ProductsRepository {
         try {
             List<String> lines = Files.readAllLines(filePath);
             List<Product> inventory = new ArrayList<>();
-            for (int i = PRODUCTS_START_INDEX; i < lines.size(); i++) {
+            for (int i = CONTENTS_START_INDEX; i < lines.size(); i++) {
                 String[] product = lines.get(i).split(DELIMITER);
                 inventory.add(convertIntoProduct(product));
             }

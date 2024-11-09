@@ -8,6 +8,8 @@ public class Constant {
 
     public static final String DELIMITER = ",";
 
+    public static final int CONTENTS_START_INDEX = 1;
+
     public static final int INDEX_NAME = 0;
     public static final int INDEX_PRICE = 1;
     public static final int INDEX_QUANTITY = 2;
