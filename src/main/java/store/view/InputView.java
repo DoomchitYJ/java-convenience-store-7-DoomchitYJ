@@ -20,10 +20,10 @@ public class InputView {
     private static final String BUYING_VIEW = "구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])";
     private static final String ORDER_REGEX = "\\[\\p{L}+\\-\\d+\\]";
 
-    private static final String MORE_FREE_VIEW = "현재 {상품명}은(는) 1개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)";
+    private static final String MORE_FREE_VIEW = "현재 %s은(는) 1개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)\n";
 
     private static final String NO_DISCOUNT_VIEW =
-            "현재 {상품명} {수량}개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)";
+            "현재 %s %d개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)\n";
 
     private static final String MEMBERSHIP_VIEW = "멤버십 할인을 받으시겠습니까? (Y/N)";
 
@@ -64,16 +64,16 @@ public class InputView {
         return quantity;
     }
 
-    public static String readMoreFree() {
-        System.out.println(MORE_FREE_VIEW);
+    public static String readMoreFree(String name) {
+        System.out.printf(MORE_FREE_VIEW, name);
 
         String input = Console.readLine().trim();
         validateYesOrNo(input);
         return input;
     }
 
-    public static String readNoDiscount() {
-        System.out.println(NO_DISCOUNT_VIEW);
+    public static String readNoDiscount(String name, int quantity) {
+        System.out.printf(NO_DISCOUNT_VIEW, name, quantity);
 
         String input = Console.readLine().trim();
         validateYesOrNo(input);
