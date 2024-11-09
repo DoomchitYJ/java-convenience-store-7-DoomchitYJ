@@ -23,6 +23,8 @@ public class InputView {
     private static final String NO_DISCOUNT_VIEW =
             "현재 {상품명} {수량}개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)";
 
+    private static final String MEMBERSHIP_VIEW = "멤버십 할인을 받으시겠습니까? (Y/N)";
+
     private static final String REPLY_YES = "Y";
     private static final String REPLY_NO = "N";
 
@@ -73,6 +75,14 @@ public class InputView {
 
     public static String readNoDiscount() {
         System.out.println(NO_DISCOUNT_VIEW);
+
+        String input = Console.readLine().trim();
+        validateYesOrNo(input);
+        return input;
+    }
+
+    public static String readMembership() {
+        System.out.println(MEMBERSHIP_VIEW);
 
         String input = Console.readLine().trim();
         validateYesOrNo(input);
