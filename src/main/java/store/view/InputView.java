@@ -20,6 +20,9 @@ public class InputView {
 
     private static final String MORE_FREE_VIEW = "현재 {상품명}은(는) 1개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)";
 
+    private static final String NO_DISCOUNT_VIEW =
+            "현재 {상품명} {수량}개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)";
+
     private static final String REPLY_YES = "Y";
     private static final String REPLY_NO = "N";
 
@@ -62,6 +65,14 @@ public class InputView {
 
     public static String readMoreFree() {
         System.out.println(MORE_FREE_VIEW);
+
+        String input = Console.readLine().trim();
+        validateYesOrNo(input);
+        return input;
+    }
+
+    public static String readNoDiscount() {
+        System.out.println(NO_DISCOUNT_VIEW);
 
         String input = Console.readLine().trim();
         validateYesOrNo(input);
