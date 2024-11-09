@@ -1,6 +1,8 @@
 package store.view;
 
 import static store.constant.Constant.DELIMITER;
+import static store.constant.Constant.REPLY_NO;
+import static store.constant.Constant.REPLY_YES;
 import static store.exception.ExceptionMessage.INVALID_FORMAT;
 import static store.exception.ExceptionMessage.NOT_YES_OR_NO;
 
@@ -24,9 +26,6 @@ public class InputView {
             "현재 {상품명} {수량}개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)";
 
     private static final String MEMBERSHIP_VIEW = "멤버십 할인을 받으시겠습니까? (Y/N)";
-
-    private static final String REPLY_YES = "Y";
-    private static final String REPLY_NO = "N";
 
     public static List<Order> readOrder() {
         System.out.println(BUYING_VIEW);

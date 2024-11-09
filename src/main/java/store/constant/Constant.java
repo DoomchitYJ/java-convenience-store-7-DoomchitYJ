@@ -19,4 +19,7 @@ public class Constant {
     public static final int INDEX_END_DATE = 4;
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
+
+    public static final String REPLY_YES = "Y";
+    public static final String REPLY_NO = "N";
 }
