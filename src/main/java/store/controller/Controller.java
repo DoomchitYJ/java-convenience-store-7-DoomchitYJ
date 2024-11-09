@@ -8,6 +8,7 @@ import static store.view.ErrorPrinter.printError;
 
 import java.util.List;
 import store.domain.Order;
+import store.domain.PurchasePolicy;
 import store.exception.StoreException;
 import store.service.InventoryService;
 import store.view.InputView;
@@ -20,6 +21,9 @@ public class Controller {
         OutputView.showProducts();
         List<Order> orders = InputView.readOrder();
 
+        for (Order order : orders) {
+            PurchasePolicy.buy(order);
+        }
     }
 
     private List<Order> readOrder() {
