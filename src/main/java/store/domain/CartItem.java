@@ -31,4 +31,12 @@ public class CartItem {
     public void setFree(final int free) {
         this.free = free;
     }
+
+    public int getPrice() {
+        return product.getPrice();
+    }
+
+    public int getCost() {
+        return product.getPrice() * quantity;
+    }
 }
