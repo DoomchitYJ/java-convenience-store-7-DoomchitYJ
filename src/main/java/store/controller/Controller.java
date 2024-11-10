@@ -20,16 +20,22 @@ public class Controller {
 
     public void run() {
 
-        OutputView.showProducts();
-        List<Order> orders = readOrder();
+        boolean running = true;
+        while (running) {
+            OutputView.showProducts();
+            List<Order> orders = readOrder();
 
-        CartService cartService = new CartService();
-        PurchasePolicy purchasePolicy = new PurchasePolicy(cartService);
-        for (Order order : orders) {
-            purchasePolicy.buy(order);
+            CartService cartService = new CartService();
+            PurchasePolicy purchasePolicy = new PurchasePolicy(cartService);
+            for (Order order : orders) {
+                purchasePolicy.buy(order);
+            }
+            PurchaseService purchaseService = new PurchaseService(cartService);
+            purchaseService.completePurchase();
+
+            if (InputView.readMoreOrder().equals("N")) running = false;
         }
-        PurchaseService purchaseService = new PurchaseService(cartService);
-        purchaseService.completePurchase();
+
     }
 
     private List<Order> readOrder() {
