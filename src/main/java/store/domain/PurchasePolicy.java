@@ -1,6 +1,7 @@
 package store.domain;
 
 import static store.constant.Constant.MAX_TRY;
+import static store.constant.Constant.NO_FREE;
 import static store.constant.Constant.REPLY_NO;
 import static store.constant.Constant.REPLY_YES;
 import static store.exception.ExceptionMessage.MAX_TRY_ERROR;
@@ -10,7 +11,6 @@ import java.util.Date;
 import store.exception.StoreException;
 import store.service.CartService;
 import store.service.InventoryService;
-import store.service.PurchaseService;
 import store.view.InputView;
 
 public class PurchasePolicy {
@@ -31,7 +31,7 @@ public class PurchasePolicy {
 
     private static void applyPromotion(Order order, Promotion promotion) {
         if (!isPromotionValid(promotion)) {
-            applyNoPromotion(order, promotion);
+            applyNoPromotion(order);
             return;
         }
         if (isBonusPossible(order, promotion)) {
@@ -45,19 +45,21 @@ public class PurchasePolicy {
         cartService.addToCart(order.getName(), order.getQuantity(), calculateFree(order, promotion));
     }
 
-    private static void applyNoPromotion(Order order, Promotion promotion) {
-        cartService.addToCart(order.getName(), order.getQuantity(), calculateFree(order, promotion));
+    private static void applyNoPromotion(Order order) {
+        cartService.addToCart(order.getName(), order.getQuantity(), NO_FREE);
     }
 
     private static void handleBonusPossible(Order order, Promotion promotion) {
         for (int i = 1; i < MAX_TRY; i++) {
             try {
                 int free = calculateFree(order, promotion);
+                int quantity = order.getQuantity();
                 String reply = InputView.readMoreFree(order.getName());
                 if (reply.equals(REPLY_YES)) {
                     free++;
+                    quantity++;
                 }
-                cartService.addToCart(order.getName(), order.getQuantity(), free);
+                cartService.addToCart(order.getName(), quantity, free);
                 return;
             } catch (IllegalArgumentException e) {
                 printError(e.getMessage());
