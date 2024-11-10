@@ -3,45 +3,51 @@ package store.domain;
 import static store.constant.Constant.MAX_TRY;
 import static store.constant.Constant.REPLY_NO;
 import static store.constant.Constant.REPLY_YES;
+import static store.exception.ExceptionMessage.MAX_TRY_ERROR;
 import static store.view.ErrorPrinter.printError;
 
 import java.util.Date;
+import store.exception.StoreException;
 import store.service.CartService;
 import store.service.InventoryService;
+import store.service.PurchaseService;
 import store.view.InputView;
 
 public class PurchasePolicy {
 
     private static final Promotions promotions = new Promotions();
 
-    public static void buy(Order order) {
+    private static final CartService cartService = new CartService();
+
+    public void buy(Order order) {
         Promotion promotion = promotions.findPromotionByName(
                 InventoryService.getPromotionNameByProductName(order.getName()));
         applyPromotion(order, promotion);
+        PurchaseService purchaseService = new PurchaseService(cartService);
+        purchaseService.completePurchase();
     }
 
     private static void applyPromotion(Order order, Promotion promotion) {
-        CartService cartService = new CartService();
         if (!isPromotionValid(promotion)) {
-            applyNoPromotion(cartService, order, promotion);
+            applyNoPromotion(order, promotion);
             return;
         }
         if (isBonusPossible(order, promotion)) {
-            handleBonusPossible(cartService, order, promotion);
+            handleBonusPossible(order, promotion);
             return;
         }
         if (isPromotionStockOut(order)) {
-            handleStockOut(cartService, order, promotion);
+            handleStockOut(order, promotion);
             return;
         }
         cartService.addToCart(order.getName(), order.getQuantity(), calculateFree(order, promotion));
     }
 
-    private static void applyNoPromotion(CartService cartService, Order order, Promotion promotion) {
+    private static void applyNoPromotion(Order order, Promotion promotion) {
         cartService.addToCart(order.getName(), order.getQuantity(), calculateFree(order, promotion));
     }
 
-    private static void handleBonusPossible(CartService cartService, Order order, Promotion promotion) {
+    private static void handleBonusPossible(Order order, Promotion promotion) {
         for (int i = 1; i < MAX_TRY; i++) {
             try {
                 int free = calculateFree(order, promotion);
@@ -55,9 +61,10 @@ public class PurchasePolicy {
                 printError(e.getMessage());
             }
         }
+        throw new StoreException(MAX_TRY_ERROR);
     }
 
-    private static void handleStockOut(CartService cartService, Order order, Promotion promotion) {
+    private static void handleStockOut(Order order, Promotion promotion) {
         for (int i = 1; i < MAX_TRY; i++) {
             try {
                 int free = calculateFree(order, promotion);
