@@ -17,14 +17,16 @@ public class PurchasePolicy {
 
     private static final Promotions promotions = new Promotions();
 
-    private static final CartService cartService = new CartService();
+    private static CartService cartService;
 
+    public PurchasePolicy(CartService cartService) {
+        this.cartService = cartService;
+    }
     public void buy(Order order) {
         Promotion promotion = promotions.findPromotionByName(
                 InventoryService.getPromotionNameByProductName(order.getName()));
         applyPromotion(order, promotion);
-        PurchaseService purchaseService = new PurchaseService(cartService);
-        purchaseService.completePurchase();
+
     }
 
     private static void applyPromotion(Order order, Promotion promotion) {

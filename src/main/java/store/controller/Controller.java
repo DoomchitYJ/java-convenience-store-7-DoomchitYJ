@@ -10,7 +10,9 @@ import java.util.List;
 import store.domain.Order;
 import store.domain.PurchasePolicy;
 import store.exception.StoreException;
+import store.service.CartService;
 import store.service.InventoryService;
+import store.service.PurchaseService;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -19,11 +21,15 @@ public class Controller {
     public void run() {
 
         OutputView.showProducts();
-        List<Order> orders = InputView.readOrder();
+        List<Order> orders = readOrder();
 
+        CartService cartService = new CartService();
+        PurchasePolicy purchasePolicy = new PurchasePolicy(cartService);
         for (Order order : orders) {
-            PurchasePolicy.buy(order);
+            purchasePolicy.buy(order);
         }
+        PurchaseService purchaseService = new PurchaseService(cartService);
+        purchaseService.completePurchase();
     }
 
     private List<Order> readOrder() {
