@@ -7,7 +7,8 @@ import static store.constant.Constant.REPLY_YES;
 import static store.exception.ExceptionMessage.MAX_TRY_ERROR;
 import static store.view.ErrorPrinter.printError;
 
-import java.util.Date;
+import camp.nextstep.edu.missionutils.DateTimes;
+import java.time.LocalDateTime;
 import store.exception.StoreException;
 import store.service.CartService;
 import store.service.InventoryService;
@@ -100,8 +101,8 @@ public class PurchasePolicy {
         if (promotion == null) {
             return false;
         }
-        Date today = new Date();
-        return today.after(promotion.getStartDate()) && today.before(promotion.getEndDate());
+        LocalDateTime today = DateTimes.now();
+        return today.isAfter(promotion.getStartDate()) && today.isBefore(promotion.getEndDate());
     }
 
     private static boolean isBonusPossible (Order order, Promotion promotion){

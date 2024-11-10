@@ -14,10 +14,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import store.domain.Promotion;
 import store.exception.StoreException;
@@ -50,18 +50,15 @@ public class PromotionsRepository {
         String name = content[INDEX_NAME];
         int buy = Integer.parseInt(content[INDEX_BUY]);
         int get = Integer.parseInt(content[INDEX_GET]);
-        Date startDate = getDate(content[INDEX_START_DATE]);
-        Date endDate = getDate(content[INDEX_END_DATE]);
+        LocalDateTime startDate = getDate(content[INDEX_START_DATE]);
+        LocalDateTime endDate = getDate(content[INDEX_END_DATE]);
 
         return new Promotion(name, buy, get, startDate, endDate);
     }
 
-    private static Date getDate(String dateInString) {
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
-        try {
-            return(formatter.parse(dateInString));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+    private static LocalDateTime getDate(String dateInString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+        LocalDate localDate = LocalDate.parse(dateInString, formatter);
+        return localDate.atStartOfDay();
     }
 }

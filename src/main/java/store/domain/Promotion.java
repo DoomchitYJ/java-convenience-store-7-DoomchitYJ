@@ -1,6 +1,6 @@
 package store.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Promotion {
 
@@ -10,11 +10,11 @@ public class Promotion {
 
     private int get;
 
-    private Date startDate;
+    private LocalDateTime startDate;
 
-    private Date endDate;
+    private LocalDateTime endDate;
 
-    public Promotion(String name, int buy, int get, Date startDate, Date endDate) {
+    public Promotion(String name, int buy, int get, LocalDateTime startDate, LocalDateTime endDate) {
         this.name = name;
         this.buy = buy;
         this.get = get;
@@ -34,11 +34,11 @@ public class Promotion {
         return get;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 }
