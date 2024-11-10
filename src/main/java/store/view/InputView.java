@@ -27,6 +27,8 @@ public class InputView {
 
     private static final String MEMBERSHIP_VIEW = "멤버십 할인을 받으시겠습니까? (Y/N)";
 
+    private static final String MORE_ORDER_VIEW = "감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)";
+
     public static List<Order> readOrder() {
         System.out.println(BUYING_VIEW);
 
@@ -84,6 +86,14 @@ public class InputView {
 
     public static String readMembership() {
         System.out.println(MEMBERSHIP_VIEW);
+
+        String input = Console.readLine().trim();
+        validateYesOrNo(input);
+        return input;
+    }
+
+    public static String readMoreOrder() {
+        System.out.println(MORE_ORDER_VIEW);
 
         String input = Console.readLine().trim();
         validateYesOrNo(input);
