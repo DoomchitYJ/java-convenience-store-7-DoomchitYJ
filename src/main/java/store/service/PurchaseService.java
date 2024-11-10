@@ -1,6 +1,7 @@
 package store.service;
 
 import static store.constant.Constant.MAX_TRY;
+import static store.constant.Constant.NO_FREE;
 import static store.exception.ExceptionMessage.MAX_TRY_ERROR;
 import static store.view.ErrorPrinter.printError;
 
@@ -50,7 +51,7 @@ public class PurchaseService {
                 .sum();
         int totalCost = calculateTotalCost();
         int totalFreePrice = calculateTotalFreePrice();
-        int memberDiscount = calculateMemberDiscount(totalCost, totalFreePrice);
+        int memberDiscount = calculateMemberDiscount();
         int finalCost = totalCost - totalFreePrice - memberDiscount;
 
         return List.of(totalQuantity, totalCost, totalFreePrice, memberDiscount, finalCost);
@@ -68,9 +69,15 @@ public class PurchaseService {
                 .sum();
     }
 
-    private int calculateMemberDiscount(int totalCost, int totalFreePrice) {
+    private int calculateMemberDiscount() {
+        List<Integer> free = cartService.getItemsFree();
+        List<Integer> cost = cartService.getItemsCost();
+        int noPromotionCost = IntStream.range(0, free.size())
+                .filter(i -> free.get(i) == NO_FREE)
+                .map(cost::get)
+                .sum();
         if (isMembershipDiscount()) {
-            int memberDiscount = (int) ((totalCost - totalFreePrice) * 0.3);
+            int memberDiscount = (int) (noPromotionCost * 0.3);
             if (memberDiscount > 8000) memberDiscount = 8000;
             return memberDiscount;
         }
