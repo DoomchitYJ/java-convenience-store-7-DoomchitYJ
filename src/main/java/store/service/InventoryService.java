@@ -52,7 +52,7 @@ public class InventoryService {
 
     public static void updateProductQuantity(String name, int quantity) {
         List<Product> products = inventory.findProductByName(name).stream()
-                        .sorted(Comparator.comparing((Product p) -> !p.getPromotion().isEmpty()))
+                        .sorted(Comparator.comparing((Product p) -> p.getPromotion().isEmpty()))
                         .collect(Collectors.toList());
         update(products, quantity);
     }
