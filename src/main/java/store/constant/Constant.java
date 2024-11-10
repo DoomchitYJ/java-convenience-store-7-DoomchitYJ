@@ -24,4 +24,7 @@ public class Constant {
 
     public static final String REPLY_YES = "Y";
     public static final String REPLY_NO = "N";
+
+    public static final int NO_FREE = 0;
+
 }

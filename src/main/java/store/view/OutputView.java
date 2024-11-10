@@ -1,5 +1,7 @@
 package store.view;
 
+import static store.constant.Constant.NO_FREE;
+
 import java.util.List;
 import store.domain.Product;
 import store.service.InventoryService;
@@ -39,7 +41,6 @@ public class OutputView {
     private static final int INDEX_MEMBER_DISCOUNT = 3;
     private static final int INDEX_FINAL_COST = 4;
 
-    private static final int NO_FREE = 0;
 
     public static void showProducts() {
         System.out.println(STORE_START_VIEW);
