@@ -22,6 +22,7 @@ public class PurchaseService {
     public void completePurchase() {
 
         makeReceipt();
+        cartService.clearCart();
     }
 
     private void makeReceipt() {

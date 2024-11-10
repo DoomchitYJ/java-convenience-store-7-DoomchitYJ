@@ -12,6 +12,10 @@ public class CartService {
         InventoryService.updateProductQuantity(name, quantity);
     }
 
+    public void clearCart() {
+        this.cart = new Cart();
+    }
+
     public List<String> getItemsName() {
         return cart.getItemsName();
     }
