@@ -10,19 +10,19 @@ public class InventoryService {
 
     private static Inventory inventory = new Inventory();
 
-    public static boolean isProductExistent(String name) {
+    public boolean isProductExistent(String name) {
         List<Product> products = inventory.findProductByName(name);
         return products.size() > 0;
     }
 
-    public static int getProductQuantity(String name) {
+    public int getProductQuantity(String name) {
         List<Product> products = inventory.findProductByName(name);
         return products.stream()
                 .mapToInt(Product::getQuantity)
                 .sum();
     }
 
-    public static int getPromotionProductQuantity(String name) {
+    public int getPromotionProductQuantity(String name) {
         List<Product> products = inventory.findProductByName(name);
         return products.stream()
                 .filter(p -> !p.getPromotion().isEmpty())
@@ -31,7 +31,7 @@ public class InventoryService {
                 .orElse(0);
     }
 
-    public static String getPromotionNameByProductName(String name) {
+    public String getPromotionNameByProductName(String name) {
         List<Product> products = inventory.findProductByName(name);
         return products.stream()
                 .filter(p -> !p.getPromotion().isEmpty())
@@ -40,24 +40,24 @@ public class InventoryService {
                 .orElse("");
     }
 
-    public static Product getProduct(String name) {
+    public Product getProduct(String name) {
         return inventory.findProductByName(name).stream()
                 .findFirst()
                 .orElse(null);
     }
 
-    public static List<Product> getProducts() {
-        return inventory.getProducts();
+    public Inventory getInventory() {
+        return inventory;
     }
 
-    public static void updateProductQuantity(String name, int quantity) {
+    public void updateProductQuantity(String name, int quantity) {
         List<Product> products = inventory.findProductByName(name).stream()
                         .sorted(Comparator.comparing((Product p) -> p.getPromotion().isEmpty()))
                         .collect(Collectors.toList());
         update(products, quantity);
     }
 
-    private static void update(List<Product> products, int quantity) {
+    private void update(List<Product> products, int quantity) {
         for (Product product : products) {
             if (product.getQuantity() >= quantity) {
                 product.updateQuantity(-quantity);

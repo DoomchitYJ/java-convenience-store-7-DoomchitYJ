@@ -18,16 +18,19 @@ public class PurchasePolicy {
 
     private static final Promotions promotions = new Promotions();
 
+    private static InventoryService inventoryService;
+
     private static CartService cartService;
 
-    public PurchasePolicy(CartService cartService) {
+    public PurchasePolicy(InventoryService inventoryService, CartService cartService) {
+        this.inventoryService = inventoryService;
         this.cartService = cartService;
     }
     public void buy(Order order) {
-        Promotion promotion = promotions.findPromotionByName(
-                InventoryService.getPromotionNameByProductName(order.getName()));
-        applyPromotion(order, promotion);
 
+        Promotion promotion = promotions.findPromotionByName(
+                inventoryService.getPromotionNameByProductName(order.getName()));
+        applyPromotion(order, promotion);
     }
 
     private static void applyPromotion(Order order, Promotion promotion) {
@@ -74,7 +77,7 @@ public class PurchasePolicy {
             try {
                 int free = calculateFree(order, promotion);
                 int quantity = order.getQuantity();
-                int promotionQuantity = InventoryService.getPromotionProductQuantity(order.getName());
+                int promotionQuantity = inventoryService.getPromotionProductQuantity(order.getName());
                 int left = promotionQuantity - free * (promotion.getBuy() + promotion.getGet());
                 String reply = InputView.readNoDiscount(order.getName(), left);
                 if (reply.equals(REPLY_NO)) {
@@ -90,7 +93,7 @@ public class PurchasePolicy {
     }
 
     private static int calculateFree (Order order, Promotion promotion){
-        int promotionQuantity = InventoryService.getPromotionProductQuantity(order.getName());
+        int promotionQuantity = inventoryService.getPromotionProductQuantity(order.getName());
         if (promotionQuantity >= order.getQuantity()) {
             return (order.getQuantity() / (promotion.getBuy() + promotion.getGet()));
         }
@@ -107,11 +110,11 @@ public class PurchasePolicy {
 
     private static boolean isBonusPossible (Order order, Promotion promotion){
         return order.getQuantity() % (promotion.getBuy() + promotion.getGet()) == promotion.getBuy()
-                && InventoryService.getPromotionProductQuantity(order.getName())
+                && inventoryService.getPromotionProductQuantity(order.getName())
                 > order.getQuantity() + promotion.getGet();
     }
 
     private static boolean isPromotionStockOut (Order order){
-        return order.getQuantity() > InventoryService.getPromotionProductQuantity(order.getName());
+        return order.getQuantity() > inventoryService.getPromotionProductQuantity(order.getName());
     }
 }

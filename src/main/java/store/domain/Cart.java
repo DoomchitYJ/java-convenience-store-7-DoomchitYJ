@@ -3,7 +3,6 @@ package store.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import store.service.InventoryService;
 
 public class Cart {
 
@@ -13,15 +12,14 @@ public class Cart {
         items = new ArrayList<CartItem>();
     }
 
-    public void addItem(String name, int quantity, int free) {
+    public void addItem(Product product, int quantity, int free) {
         for (CartItem item : items) {
-            if (item.getProduct().getName().equals(name)) {
+            if (item.getProduct().getName().equals(product.getName())) {
                 item.setQuantity(item.getQuantity() + quantity);
                 item.setFree(item.getFree() + free);
                 return;
             }
         }
-        Product product = InventoryService.getProduct(name);
         items.add(new CartItem(product, quantity, free));
     }
 

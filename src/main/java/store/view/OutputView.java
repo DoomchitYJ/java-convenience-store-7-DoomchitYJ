@@ -3,8 +3,8 @@ package store.view;
 import static store.constant.Constant.NO_FREE;
 
 import java.util.List;
+import store.domain.Inventory;
 import store.domain.Product;
-import store.service.InventoryService;
 
 public class OutputView {
 
@@ -42,10 +42,10 @@ public class OutputView {
     private static final int INDEX_FINAL_COST = 4;
 
 
-    public static void showProducts() {
+    public static void showProducts(Inventory inventory) {
         System.out.println(STORE_START_VIEW);
 
-        for (Product product : InventoryService.getProducts()) {
+        for (Product product : inventory.getProducts()) {
             String name = product.getName();
             int price = product.getPrice();
             int quantity = product.getQuantity();

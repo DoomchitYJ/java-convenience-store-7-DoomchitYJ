@@ -5,11 +5,17 @@ import store.domain.Cart;
 
 public class CartService {
 
+    private static InventoryService inventoryService;
+
     private static Cart cart = new Cart();
 
+    public CartService(InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
+    }
+
     public void addToCart(String name, int quantity, int free) {
-        cart.addItem(name, quantity, free);
-        InventoryService.updateProductQuantity(name, quantity);
+        cart.addItem(inventoryService.getProduct(name), quantity, free);
+        inventoryService.updateProductQuantity(name, quantity);
     }
 
     public void clearCart() {

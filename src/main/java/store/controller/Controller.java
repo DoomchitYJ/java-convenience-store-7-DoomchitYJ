@@ -20,13 +20,14 @@ public class Controller {
 
     public void run() {
 
+        InventoryService inventoryService = new InventoryService();
         boolean running = true;
         while (running) {
-            OutputView.showProducts();
-            List<Order> orders = readOrder();
+            OutputView.showProducts(inventoryService.getInventory());
+            List<Order> orders = readOrder(inventoryService);
 
-            CartService cartService = new CartService();
-            PurchasePolicy purchasePolicy = new PurchasePolicy(cartService);
+            CartService cartService = new CartService(inventoryService);
+            PurchasePolicy purchasePolicy = new PurchasePolicy(inventoryService, cartService);
             for (Order order : orders) {
                 purchasePolicy.buy(order);
             }
@@ -38,11 +39,11 @@ public class Controller {
 
     }
 
-    private List<Order> readOrder() {
+    private List<Order> readOrder(InventoryService inventoryService) {
         for (int i=1; i<=MAX_TRY; i++) {
             try {
                 List<Order> orders = InputView.readOrder();
-                validateOrders(orders);
+                validateOrders(inventoryService, orders);
 
                 return orders;
             } catch (IllegalArgumentException e) {
@@ -52,23 +53,23 @@ public class Controller {
         throw new StoreException(MAX_TRY_ERROR);
     }
 
-    private void validateOrders(List<Order> orders) {
+    private void validateOrders(InventoryService inventoryService, List<Order> orders) {
         for (Order order : orders) {
-            if (!hasProduct(order)) {
+            if (!hasProduct(inventoryService, order)) {
                 throw new StoreException(NON_EXISTENT_PRODUCT);
             }
-            if (!isStockAvailable(order)) {
+            if (!isStockAvailable(inventoryService, order)) {
                 throw new StoreException(TOO_MANY_ORDER);
             }
         }
     }
 
-    private boolean hasProduct(Order order) {
-        return InventoryService.isProductExistent(order.getName());
+    private boolean hasProduct(InventoryService inventoryService, Order order) {
+        return inventoryService.isProductExistent(order.getName());
     }
 
-    private boolean isStockAvailable(Order order) {
-        return InventoryService.getProductQuantity(order.getName()) >= order.getQuantity();
+    private boolean isStockAvailable(InventoryService inventoryService, Order order) {
+        return inventoryService.getProductQuantity(order.getName()) >= order.getQuantity();
     }
 
     private boolean dontWantMoreOrder() {
