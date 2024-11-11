@@ -30,15 +30,35 @@ public class ProductsRepository {
     public List<Product> loadInventory() {
         try {
             List<String> lines = Files.readAllLines(filePath);
-            List<Product> inventory = new ArrayList<>();
-            for (int i = CONTENTS_START_INDEX; i < lines.size(); i++) {
-                String[] product = lines.get(i).split(DELIMITER);
-                inventory.add(convertIntoProduct(product));
-            }
-            return inventory;
+            return addProductIntoInventory(lines);
         } catch (IOException e) {
             throw new StoreException(FILE_PATH_ERROR);
         }
+    }
+
+    private static List<Product> addProductIntoInventory(final List<String> lines) {
+        List<Product> inventory = new ArrayList<>();
+        for (int i = CONTENTS_START_INDEX; i < lines.size()-1; i++) {
+            String[] product = lines.get(i).split(DELIMITER);
+            inventory.add(convertIntoProduct(product));
+            checkOnlyPromotionProduct(inventory, lines, i);
+        }
+        addLastProduct(inventory, lines);
+        return inventory;
+    }
+
+    private static void checkOnlyPromotionProduct(final List<Product> inventory, final List<String> lines, int index) {
+        String[] currentProduct = lines.get(index).split(DELIMITER);
+        String[] nextProduct = lines.get(++index).split(DELIMITER);
+        if (!currentProduct[INDEX_PROMOTION].equals(NULL)
+                && !nextProduct[INDEX_NAME].equals(currentProduct[INDEX_NAME])) {
+            String[] noPromotionProduct = {currentProduct[INDEX_NAME], currentProduct[INDEX_PRICE], "0", "null"};
+            inventory.add(convertIntoProduct(noPromotionProduct));
+        }
+    }
+
+    private static void addLastProduct(final List<Product> inventory, final List<String> lines) {
+        inventory.add(convertIntoProduct(lines.getLast().split(DELIMITER)));
     }
 
     private static Product convertIntoProduct(String[] product) {
