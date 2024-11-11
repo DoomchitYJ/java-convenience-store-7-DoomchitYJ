@@ -21,9 +21,9 @@ public class OutputView {
     private static final String HEADER_QUANTITY = "수량";
     private static final String HEADER_COST = "금액";
 
-    private static final String RECEIPT_CONTENT_FORMAT_1 = "%-10s %-10d %,-10d\n";
-    private static final String RECEIPT_CONTENT_FORMAT_2 = "%-10s %,-10d\n";
-    private static final String RECEIPT_CONTENT_FORMAT_3 = "%-10s %,-20d\n";
+    private static final String RECEIPT_CONTENT_FORMAT_1 = "%-10s %-10d %,5d\n";
+    private static final String RECEIPT_CONTENT_FORMAT_2 = "%-10s %-10d\n";
+    private static final String RECEIPT_CONTENT_FORMAT_3 = "%-10s %-10s %,5d\n";
 
     private static final String TOTAL_COST = "총구매액";
     private static final String PROMOTION_DISCOUNT = "행사할인";
@@ -57,7 +57,7 @@ public class OutputView {
 
     private static void printProduct(String name, int price, int quantity, String promotion) {
         if (quantity == NO_STOCK) {
-            System.out.printf("- %s %d원 재고 없음 %s\n", name, price, promotion);
+            System.out.printf("- %s %,d원 재고 없음 %s\n", name, price, promotion);
             return;
         }
 
@@ -84,8 +84,8 @@ public class OutputView {
         System.out.println(SUMMARY_VIEW);
         System.out.printf(RECEIPT_CONTENT_FORMAT_1,
                 TOTAL_COST, summaryInfo.get(INDEX_TOTAL_QUANTITY), summaryInfo.get(INDEX_TOTAL_COST));
-        System.out.printf(RECEIPT_CONTENT_FORMAT_3, PROMOTION_DISCOUNT, -summaryInfo.get(INDEX_TOTAL_FREE_PRICE));
-        System.out.printf(RECEIPT_CONTENT_FORMAT_3, MEMBERSHIP_DISCOUNT, -summaryInfo.get(INDEX_MEMBER_DISCOUNT));
-        System.out.printf(RECEIPT_CONTENT_FORMAT_3, FINAL_COST, summaryInfo.get(INDEX_FINAL_COST));
+        System.out.printf(RECEIPT_CONTENT_FORMAT_3, PROMOTION_DISCOUNT, " ", -summaryInfo.get(INDEX_TOTAL_FREE_PRICE));
+        System.out.printf(RECEIPT_CONTENT_FORMAT_3, MEMBERSHIP_DISCOUNT, " ", -summaryInfo.get(INDEX_MEMBER_DISCOUNT));
+        System.out.printf(RECEIPT_CONTENT_FORMAT_3, FINAL_COST, " ", summaryInfo.get(INDEX_FINAL_COST));
     }
 }
