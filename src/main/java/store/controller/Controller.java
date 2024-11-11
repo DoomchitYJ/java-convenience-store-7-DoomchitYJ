@@ -33,7 +33,7 @@ public class Controller {
             PurchaseService purchaseService = new PurchaseService(cartService);
             purchaseService.completePurchase();
 
-            if (InputView.readMoreOrder().equals("N")) running = false;
+            if (dontWantMoreOrder()) running = false;
         }
 
     }
@@ -69,5 +69,16 @@ public class Controller {
 
     private boolean isStockAvailable(Order order) {
         return InventoryService.getProductQuantity(order.getName()) >= order.getQuantity();
+    }
+
+    private boolean dontWantMoreOrder() {
+        for (int i=1; i<=MAX_TRY; i++) {
+            try {
+                return InputView.readMoreOrder().equals("N");
+            } catch (IllegalArgumentException e) {
+                printError(e.getMessage());
+            }
+        }
+        throw new StoreException(MAX_TRY_ERROR);
     }
 }
