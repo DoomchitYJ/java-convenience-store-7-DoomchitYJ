@@ -36,7 +36,7 @@ public class Controller {
 
             if (dontWantMoreOrder()) running = false;
         }
-
+        inventoryService.resetInventory();
     }
 
     private List<Order> readOrder(InventoryService inventoryService) {

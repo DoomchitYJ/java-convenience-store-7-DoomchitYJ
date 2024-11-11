@@ -67,4 +67,8 @@ public class InventoryService {
             product.updateQuantity(-product.getQuantity());
         }
     }
+
+    public void resetInventory() {
+        inventory = new Inventory();
+    }
 }
