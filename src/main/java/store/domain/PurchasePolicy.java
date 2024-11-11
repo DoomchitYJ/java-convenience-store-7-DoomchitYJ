@@ -26,6 +26,7 @@ public class PurchasePolicy {
         this.inventoryService = inventoryService;
         this.cartService = cartService;
     }
+
     public void buy(Order order) {
 
         Promotion promotion = promotions.findPromotionByName(
@@ -77,8 +78,7 @@ public class PurchasePolicy {
             try {
                 int free = calculateFree(order, promotion);
                 int quantity = order.getQuantity();
-                int promotionQuantity = inventoryService.getPromotionProductQuantity(order.getName());
-                int left = promotionQuantity - free * (promotion.getBuy() + promotion.getGet());
+                int left = quantity - free * (promotion.getBuy() + promotion.getGet());
                 String reply = InputView.readNoDiscount(order.getName(), left);
                 if (reply.equals(REPLY_NO)) {
                     quantity -= left;
@@ -88,7 +88,6 @@ public class PurchasePolicy {
             } catch (IllegalArgumentException e) {
                 printError(e.getMessage());
             }
-
         }
     }
 
